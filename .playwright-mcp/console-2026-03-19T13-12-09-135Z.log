@@ -1,0 +1,30 @@
+[     520ms] [WARNING] THREE.THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[   82855ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=TqPUX-ghjV1O8We92rhAr' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10878
+[   83858ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=TqPUX-ghjV1O8We92rhAr' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10878
+[   84861ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=TqPUX-ghjV1O8We92rhAr' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10878
+[   85863ms] [ERROR] WebSocket connection to 'ws://localhost:3000/_next/webpack-hmr?id=TqPUX-ghjV1O8We92rhAr' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_client_17643121._.js:10878
+[   88389ms] [WARNING] THREE.THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  253548ms] [ERROR] ./src/components/Loader.tsx:65:13
+Ecmascript file had an error
+  63 |       // Store initial and floor positions for color calculation
+  64 |       const startY = landingY - 180;
+> 65 |       const floorY = landingY + 10;
+     |             ^^^^^^
+  66 |       const rangeY = floorY - startY;
+  67 |
+  68 |       // Sync physics body position to DOM element
+
+the name `floorY` is defined multiple times
+
+Import traces:
+  Client Component Browser:
+    ./src/components/Loader.tsx [Client Component Browser]
+    ./src/components/PageWrapper.tsx [Client Component Browser]
+    ./src/components/PageWrapper.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/Loader.tsx [Client Component SSR]
+    ./src/components/PageWrapper.tsx [Client Component SSR]
+    ./src/components/PageWrapper.tsx [Server Component]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127

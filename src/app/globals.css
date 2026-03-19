@@ -387,7 +387,7 @@ body {
   width: 45px;
   height: 45px;
   top: -2px;
-  left: 55%;
+  left: 48%;
   transform: translateX(-50%) translateY(0);
   border-radius: 50%;
   background: radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95), #00e5ff 50%, rgba(0,0,0,0) 100%);
