@@ -22,6 +22,14 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
       // Make the dot visible (starts hidden via CSS)
       dotWrapper.style.opacity = "1";
 
+      // Setup Spotlight Ticker
+      const updateLight = () => {
+        const rect = dotWrapper.getBoundingClientRect();
+        root.style.setProperty("--dot-x", `${rect.left + rect.width / 2}px`);
+        root.style.setProperty("--dot-y", `${rect.top + rect.height / 2}px`);
+      };
+      gsap.ticker.add(updateLight);
+
       // ===== FIND THE "i" LETTER POSITION =====
       // Get the position of the "i" letter - this tells us where to land the dot
       const brandI = document.querySelector(".loader-brand-i") as HTMLElement;
@@ -56,59 +64,17 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
       // ===== START BOUNCE ANIMATION =====
       // Wait 900ms after page load before dropping the dot
       const dropTimer = setTimeout(() => {
+        const bgLayers = root.querySelectorAll(
+          ".loader-aurora-layer, .loader-orbs, .loader-grid, .loader-rays, .loader-bloom, .loader-grain, .loader-vignette"
+        );
+        const letters = root.querySelectorAll(".loader-welcome, .loader-brand-i, .loader-brand-3, .loader-brand-w");
+        
         // Create GSAP timeline - this sequences all bounce animations together
         const tl = gsap.timeline({
           onComplete: () => {
-            // ===== AFTER 2 BOUNCES: START ZOOM TRANSITION =====
-            setPhase("zoom");
-
-            // Show color overlay behind the expanding dot (cyan/teal glow)
-            // Prepare dot to serve as the teal screen-fill
-            dotWrapper.style.background = "#00bfa5"; // Solid Teal, no alpha transparency
-            dotWrapper.style.boxShadow = "none";
-            
-            // Hide the inner cyan/white core so the teal wrapper is visible!
-            const dotCore = dotWrapper.querySelector(".loader-dot-core") as HTMLElement;
-            if (dotCore) {
-              gsap.to(dotCore, { opacity: 0, duration: 0.2 });
-            }
-            
-            const colorOverlay = root.querySelector(".loader-color-overlay") as HTMLElement;
-            if (colorOverlay) {
-              colorOverlay.style.display = "block"; 
-              colorOverlay.style.background = "#00bfa5"; // Solid Teal overlay
-              colorOverlay.style.opacity = "0";
-              colorOverlay.style.transition = "none"; // GSAP takes full control
-            }
-
-            // Step 1: Dot gets big (half screen)
-            gsap.to(dotWrapper, {
-              scale: 25, // roughly half the screen height/width depending on device
-              duration: 0.5,
-              ease: "power2.inOut", 
-              onComplete: () => {
-                 // Step 2: Show the teal color on the whole screen
-                 gsap.to(colorOverlay, { 
-                   opacity: 1, 
-                   duration: 0.3, // slightly longer for dramatic flash
-                   onComplete: () => {
-                     // The screen is perfectly Teal. Hand off to PageWrapper landing page
-                     setPhase("done");
-                     onComplete();
-                   }
-                 });
-              }
-            });
-
-            // Fade out background layers (aurora blobs, etc.) to keep it clean
-            const bgLayers = root.querySelectorAll(
-              ".loader-aurora-layer, .loader-orbs, .loader-grid, .loader-rays, .loader-bloom, .loader-grain, .loader-vignette"
-            );
-            gsap.to(bgLayers, { opacity: 0, duration: 0.4, ease: "power2.out" });
-
-            // Fade out the brand letters (Welcome to, i, 3, W)
-            const letters = root.querySelectorAll(".loader-welcome, .loader-brand-i, .loader-brand-3, .loader-brand-w");
-            gsap.to(letters, { opacity: 0, duration: 0.2, ease: "none" });
+             // The timeline is entirely finished (including the teal flash). Hand off to PageWrapper landing page instantly.
+             setPhase("done");
+             onComplete();
           }
         });
 
@@ -117,16 +83,16 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
         // 250 = bounces 250px above landing position
         const bounceHeight = 250;
 
-        // STEP 1: DROP - Fall from top to the "i"
-        // Duration 0.6s - faster drop
+        // STEP 1: DROP - Fast, accelerating fall (gravity)
         tl.fromTo(dotWrapper,
-          { y: startY }, // Start at 400px above "i"
+          { y: startY, scaleX: 1, scaleY: 1 },
           {
-            y: landingY,   // End at the "i" position
-            duration: 0.6,
-            ease: "power2.in", // Accelerating fall (like real gravity)
-            // While falling, change color based on animation progress:
-            // 0-30%: cyan (fast falling), 30-60%: teal (first bounce), 60-100%: amber (slowing)
+            y: landingY,   
+            duration: 0.45,
+            ease: "power3.in", // Gravity acceleration
+            scaleY: 1.25, // Stretch vertically while falling
+            scaleX: 0.8,  // Condense horizontally
+            transformOrigin: "bottom center", // Crucial: Pin to the floor for flat impact
             onUpdate: function() {
               const progress = this.progress();
               const color = progress < 0.3 ? "#00e5ff" : progress < 0.6 ? "#00bfa5" : "#ffb300";
@@ -139,90 +105,144 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
           }
         )
 
-        // STEP 2: FIRST BOUNCE UP - bounce up from landing position
-        // sine.out = smooth deceleration at the top of the bounce
+        // SQUASH ON IMPACT 1
         .to(dotWrapper, {
-          y: landingY - bounceHeight, // 250px above landing
-          duration: 0.6,
-          ease: "sine.out"
+          scaleY: 0.4,
+          scaleX: 1.6,
+          duration: 0.08,
+          ease: "power2.out"
         })
 
-        // STEP 3: FIRST BOUNCE DOWN - return to landing position
-        // sine.in = smooth acceleration downward
+        // STEP 2: FIRST BOUNCE UP
+        .to(dotWrapper, {
+          y: landingY - bounceHeight,
+          scaleY: 1.1,
+          scaleX: 0.9,
+          duration: 0.3,
+          ease: "power2.out" // Decelerate to peak
+        })
+
+        // STEP 3: FIRST BOUNCE DOWN
         .to(dotWrapper, {
           y: landingY,
-          duration: 0.6,
-          ease: "sine.in"
+          scaleY: 1.15,
+          scaleX: 0.85,
+          duration: 0.3,
+          ease: "power2.in" // Accelerate to floor
         })
 
-        // STEP 4: SECOND BOUNCE UP - smaller bounce (60% of first)
+        // SQUASH ON IMPACT 2
         .to(dotWrapper, {
-          y: landingY - (bounceHeight * 0.6), // 150px above landing
-          duration: 0.4,
-          ease: "sine.out"
+          scaleY: 0.6,
+          scaleX: 1.4,
+          duration: 0.06,
+          ease: "power2.out"
         })
 
-        // STEP 5: SECOND BOUNCE DOWN - settle back
+        // STEP 4: SECOND BOUNCE UP
         .to(dotWrapper, {
-          y: landingY,
-          duration: 0.4,
-          ease: "sine.in"
+          y: landingY - (bounceHeight * 0.4), 
+          scaleY: 1.05,
+          scaleX: 0.95,
+          duration: 0.2,
+          ease: "power2.out"
         })
 
-        // STEP 6: THIRD BOUNCE UP - tiny bounce (30% of first)
-        .to(dotWrapper, {
-          y: landingY - (bounceHeight * 0.3), // 75px above landing
-          duration: 0.25,
-          ease: "sine.out"
-        })
-
-        // STEP 7: FINAL SETTLE - stop at landing position
+        // STEP 5: SECOND BOUNCE DOWN
         .to(dotWrapper, {
           y: landingY,
-          duration: 0.25,
-          ease: "sine.in"
-        });
+          scaleY: 1.05,
+          scaleX: 0.95,
+          duration: 0.2,
+          ease: "power2.in"
+        })
+
+        // SQUASH ON IMPACT 3
+        .to(dotWrapper, {
+          scaleY: 0.85,
+          scaleX: 1.15,
+          duration: 0.05,
+          ease: "power2.out"
+        })
+
+        // STEP 6: THIRD BOUNCE UP (Higher trajectory before the massive drop)
+        .to(dotWrapper, {
+          y: landingY - (bounceHeight * 0.2), 
+          scaleX: 1,
+          scaleY: 1,
+          duration: 0.15,
+          ease: "power2.out"
+        }, "expandLight")
+
+        // STEP 7: THE FINAL IMPACT (Squashes heavily)
+        .to(dotWrapper, {
+          y: landingY,
+          scaleY: 0.6,
+          scaleX: 1.4,
+          duration: 0.12,
+          ease: "power2.in"
+        }, "expandLight+=0.15")
+        
+        // ANTICIPATION POP: Snap back to perfect roundness right before bursting!
+        .to(dotWrapper, {
+          scaleY: 1,
+          scaleX: 1,
+          background: "#00bfa5", // Start turning teal instantly
+          boxShadow: "none",
+          duration: 0.1,
+          ease: "back.out(3)" // Dramatic cartoon pop
+        }, "expandLight+=0.27")
+
+        // Fade out inner cyan core precisely as it pops
+        .to(".loader-dot-core", {
+          opacity: 0,
+          duration: 0.1
+        }, "expandLight+=0.27")
+
+        // KINETIC CAMERA DIVE (Perfect Circle Explosion)
+        .to(dotWrapper, {
+          scale: 40, // Massive enough to cover all corners
+          duration: 0.5,
+          ease: "power3.in" // Accelerating dive through the dot into the screen!
+        }, "expandLight+=0.37")
+
+        // Sync the mask explosion flawlessly to the dot's camera dive
+        .to(root, {
+          "--light-radius": "2500px",
+          duration: 0.5,
+          ease: "power3.in"
+        }, "expandLight+=0.37")
+
+        // Prepare and Flash the color overlay at the climax of the dive to guarantee flawless coverage
+        .set(".loader-color-overlay", {
+          display: "block",
+          background: "#00bfa5",
+          opacity: 0,
+          transition: "none"
+        }, "expandLight+=0.37")
+        .to(".loader-color-overlay", {
+          opacity: 1,
+          duration: 0.2,
+          ease: "power2.inOut"
+        }, "expandLight+=0.7") 
+
+        // Clean out legacy artifacts safely inside the dark dive sequence
+        .to(bgLayers, { opacity: 0, duration: 0.3, ease: "power2.in" }, "expandLight+=0.5")
+        .to(letters, { opacity: 0, duration: 0.2, ease: "none" }, "expandLight+=0.5");
       }, 900);
 
       // ===== LETTER REVEAL ANIMATIONS =====
-      // These animate the brand letters appearing one by one
-
-      // STEP 1: "Welcome to" - fades in and slides up
-      // Duration 0.4s, ease:power3.out = smooth deceleration
-      gsap.to(".loader-welcome", {
+      // The letters are immediately made opaque so the traveling spotlight dictates their visibility
+      gsap.to(".loader-welcome, .loader-brand-i, .loader-brand-3, .loader-brand-w", {
         opacity: 1,
         y: 0,
-        duration: 0.4,
-        ease: "power3.out",
-      });
-
-      // STEP 2: "i" - appears after 0.3s delay
-      // ease:none = instant start after delay (linear)
-      gsap.to(".loader-brand-i", {
-        opacity: 1,
-        duration: 0.25,
-        delay: 0.3,
-        ease: "none",
-      });
-
-      // STEP 3: "3" - appears after 0.55s delay (staggered)
-      gsap.to(".loader-brand-3", {
-        opacity: 1,
-        duration: 0.25,
-        delay: 0.55,
-        ease: "none",
-      });
-
-      gsap.to(".loader-brand-w", {
-        opacity: 1,
-        duration: 0.25,
-        delay: 0.8,
-        ease: "none",
+        duration: 0.2, // Fast reveal before drop starts
       });
 
       return () => {
         clearTimeout(initTimer);
         clearTimeout(dropTimer);
+        gsap.ticker.remove(updateLight);
       };
     }, 100);
 
