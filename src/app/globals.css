@@ -399,10 +399,10 @@ body {
 /* ---- Dot wrapper — positioned on the "i" ---- */
 .loader-dot-wrapper {
   position: absolute;
-  width: 45px;
-  height: 45px;
-  top: 0;
-  left: 48%;
+  width: clamp(15px, 3.5vw, 45px); /* Scales proportionally with the "i" text clamp */
+  height: clamp(15px, 3.5vw, 45px);
+  top: 9%; /* Position it 9% down the bounding box so y:0 lands right on the letter */
+  left: 46.5%; /* Lock exact visual center of the lowercase "ı" visually over all breakpoints */
   transform: translate(-50%, 0);
   border-radius: 50%;
   background: radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95), #00e5ff 50%, rgba(0,0,0,0) 100%);

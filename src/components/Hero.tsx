@@ -101,6 +101,9 @@ export default function Hero({ isVisible = true }: { isVisible?: boolean }) {
       const moveX = e.clientX - window.innerWidth / 2;
       const moveY = e.clientY - window.innerHeight / 2;
 
+      // Only run mouse tracking on devices that support hover (not mobile touch)
+      if (!window.matchMedia("(hover: hover)").matches) return;
+
       // Aurora moves toward mouse
       xTo1(moveX * 0.8);
       yTo1(moveY * 0.8);
@@ -148,7 +151,7 @@ export default function Hero({ isVisible = true }: { isVisible?: boolean }) {
         
         {/* Ambient static emerald corner glow */}
         <div 
-          className="absolute top-[-10%] right-[-5%] w-[40vw] h-[40vw] rounded-full opacity-20 mix-blend-screen blur-[130px] animate-pulse"
+          className="absolute top-[-10%] right-[-5%] w-[40vw] h-[40vw] rounded-full opacity-20 mix-blend-screen blur-[130px] animate-pulse will-change-transform"
           style={{ background: "radial-gradient(circle at center, #00bfa5 0%, transparent 70%)" }}
         />
 
@@ -243,8 +246,8 @@ export default function Hero({ isVisible = true }: { isVisible?: boolean }) {
             <div className="overflow-hidden pb-2 lg:pb-4 w-full flex justify-start">
               <motion.div 
                 variants={fadeUpText} 
-                className="text-white font-black text-[clamp(50px,9vw,160px)] leading-[0.8] tracking-tighter uppercase drop-shadow-2xl"
-                style={{ fontFamily: "var(--font-syne), sans-serif" }}
+                className="text-white font-black text-[clamp(40px,9vw,160px)] leading-[0.8] tracking-tighter uppercase drop-shadow-2xl"
+                style={{ fontFamily: "var(--font-syne), sans-serif", overflowWrap: "break-word" }}
               >
                 PADHAI
               </motion.div>
@@ -254,19 +257,19 @@ export default function Hero({ isVisible = true }: { isVisible?: boolean }) {
             <div className="overflow-hidden pb-2 lg:pb-4 w-full flex justify-center">
               <motion.div 
                 variants={fadeUpText} 
-                className="text-transparent bg-clip-text bg-linear-to-r from-accent to-teal font-black text-[clamp(50px,9vw,160px)] leading-[0.8] tracking-tighter uppercase drop-shadow-2xl"
-                style={{ fontFamily: "var(--font-syne), sans-serif" }}
+                className="text-transparent bg-clip-text bg-linear-to-r from-accent to-teal font-black text-[clamp(40px,9vw,160px)] leading-[0.8] tracking-tighter uppercase drop-shadow-2xl"
+                style={{ fontFamily: "var(--font-syne), sans-serif", overflowWrap: "break-word" }}
               >
                 KA NAYA
               </motion.div>
             </div>
             
             {/* Right Aligned */}
-            <div className="overflow-hidden pb-2 lg:pb-6 w-full flex justify-end pr-8 lg:pr-[20%] -mt-6 lg:-mt-12">
+            <div className="overflow-hidden pb-2 lg:pb-6 w-full flex justify-end pr-4 lg:pr-[20%] -mt-4 lg:-mt-12">
               <motion.div 
                 variants={fadeUpText} 
-                className="italic text-white opacity-90 font-light text-[clamp(65px,11vw,170px)] leading-[0.8] tracking-tight lowercase drop-shadow-2xl"
-                style={{ fontFamily: "var(--font-display), serif" }}
+                className="italic text-white opacity-90 font-light text-[clamp(50px,11vw,170px)] leading-[0.8] tracking-tight lowercase drop-shadow-2xl"
+                style={{ fontFamily: "var(--font-display), serif", overflowWrap: "break-word" }}
               >
                 companion.
               </motion.div>

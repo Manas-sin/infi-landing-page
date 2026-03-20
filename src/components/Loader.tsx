@@ -35,31 +35,18 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
       const brandI = document.querySelector(".loader-brand-i") as HTMLElement;
       const brandRect = brandI?.getBoundingClientRect();
 
-      // Check if user is on mobile or desktop
-      const isMobile = window.innerWidth < 768;
-      // Shift dot left slightly so it aligns with the center of the "i"
-      const centerOffset = isMobile ? -6 : -14;
-
-      // ===== SET INITIAL DOT POSITION =====
-      // Position dot horizontally - GSAP will handle vertical position
-      dotWrapper.style.left = `calc(50% + ${centerOffset}px)`;
+      // We now rely on pure CSS (left percentage in globals.css) for horizontal alignment
+      // so the dot remains perfectly centered scaled on the "i" even on resize.
       dotWrapper.style.top = "auto"; // Let GSAP handle Y position
 
       // ===== CONTROL SETTINGS =====
-      // 1. GAP - Distance between dot and "i" when landed (negative = above "i")
-      // -35 = dot lands 35px above the "i"
-      const gapOffset = -35;
-
-      // 2. BOUNCE HEIGHT - Height of first bounce (set below in bounceHeight variable)
-      // 30 = first bounce goes 30px up from landing position
-
-      // Calculate landing position (dot lands at "i" + gap)
-      const landingY = brandRect ? brandRect.top + window.scrollY + gapOffset : 100;
-      // Start 400px above the landing position
-      const startY = landingY - 400;
-
-      // Set initial position - 400px above the "i"
-      gsap.set(dotWrapper, { x: "-10%", y: startY });
+      // The dot's resting place directly on the 'i' will be conceptually `y: 0`. 
+      // We start it high up off-screen using a viewport height percentage.
+      const landingY = "0px";
+      const startY = "-400px"; // Drop from 400px above
+      
+      // Set initial position - high above the "i"
+      gsap.set(dotWrapper, { x: "-50%", y: startY });
 
       // ===== START BOUNCE ANIMATION =====
       // Wait 900ms after page load before dropping the dot
@@ -79,9 +66,10 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
         });
 
         // ===== DROP & BOUNCE PHYSICS =====
-        // Bounce height - how high the dot bounces (in pixels)
-        // 250 = bounces 250px above landing position
-        const bounceHeight = 250;
+        // Bounce height mapping - how high the dot bounces (in responsive vw)
+        const bounce1 = "-10vw";
+        const bounce2 = "-4vw";
+        const bounce3 = "-2vw";
 
         // STEP 1: DROP - Fast, accelerating fall (gravity)
         tl.fromTo(dotWrapper,
@@ -115,7 +103,7 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
 
         // STEP 2: FIRST BOUNCE UP
         .to(dotWrapper, {
-          y: landingY - bounceHeight,
+          y: bounce1,
           scaleY: 1.1,
           scaleX: 0.9,
           duration: 0.3,
@@ -141,7 +129,7 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
 
         // STEP 4: SECOND BOUNCE UP
         .to(dotWrapper, {
-          y: landingY - (bounceHeight * 0.4), 
+          y: bounce2, 
           scaleY: 1.05,
           scaleX: 0.95,
           duration: 0.2,
@@ -167,7 +155,7 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
 
         // STEP 6: THIRD BOUNCE UP (Higher trajectory before the massive drop)
         .to(dotWrapper, {
-          y: landingY - (bounceHeight * 0.2), 
+          y: bounce3, 
           scaleX: 1,
           scaleY: 1,
           duration: 0.15,

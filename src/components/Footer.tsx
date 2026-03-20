@@ -17,28 +17,7 @@ export default function Footer() {
   const yBg = useTransform(scrollYProgress, [0, 1], ["20%", "0%"]);
   const scaleText = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
 
-  useEffect(() => {
-    // Apply massive magnetic effects to social icons
-    const magneticTargets = document.querySelectorAll(".magnetic-social");
-    magneticTargets.forEach((target) => {
-      const xTo = gsap.quickTo(target, "x", { duration: 0.5, ease: "elastic.out(1, 0.3)" });
-      const yTo = gsap.quickTo(target, "y", { duration: 0.5, ease: "elastic.out(1, 0.3)" });
-
-      target.addEventListener("mousemove", (e) => {
-        const mouseEvent = e as MouseEvent;
-        const rect = (target as HTMLElement).getBoundingClientRect();
-        const relX = mouseEvent.clientX - rect.left - rect.width / 2;
-        const relY = mouseEvent.clientY - rect.top - rect.height / 2;
-        xTo(relX * 0.4);
-        yTo(relY * 0.4);
-      });
-
-      target.addEventListener("mouseleave", () => {
-        xTo(0);
-        yTo(0);
-      });
-    });
-  }, []);
+  // No more magnetic-social useEffect since those elements were removed.
 
   return (
     <footer ref={containerRef} className="relative pt-[100px] bg-[#060610] overflow-hidden flex flex-col items-center">
@@ -113,7 +92,7 @@ export default function Footer() {
       {/* Extreme Massive Text Footer Parallax - beautifully illuminates at the end of the scroll journey */}
       <motion.div 
         style={{ y: yBg, scale: scaleText }}
-        className="w-full flex justify-center items-end select-none pointer-events-none mt-10 overflow-visible px-4 relative z-0"
+        className="w-full flex justify-center items-end select-none pointer-events-none mt-10 overflow-hidden px-4 relative z-0 max-w-[100vw]"
       >
         <motion.span 
           style={{ 

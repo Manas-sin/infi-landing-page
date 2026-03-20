@@ -71,7 +71,7 @@ export default function Demo() {
         style={{ y: bgY1 }}
         animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute w-[800px] h-[800px] top-[10%] left-[50%] -translate-x-1/2 rounded-full blur-[150px] pointer-events-none z-0"
+        className="absolute w-[800px] h-[800px] top-[10%] left-[50%] -translate-x-1/2 rounded-full blur-[150px] pointer-events-none z-0 will-change-transform transform-gpu"
       >
         <div className="w-full h-full rounded-full" style={{ background: "radial-gradient(circle, rgba(0,229,255,0.1), rgba(179,136,255,0.05) 70%)" }} />
       </motion.div>
@@ -118,7 +118,7 @@ export default function Demo() {
         ref={videoRef}
         className="min-h-screen w-full flex items-center justify-center relative z-20 py-24"
       >
-        <div className="relative w-[90vw] max-w-[1100px] aspect-video rounded-[32px] md:rounded-[48px] border border-glass-border bg-black/40 backdrop-blur-2xl overflow-hidden shadow-[0_20px_100px_rgba(0,0,0,0.5)] flex items-center justify-center group pointer-events-auto">
+        <div className="relative w-[90vw] max-w-[1100px] aspect-video rounded-[32px] md:rounded-[48px] border border-glass-border bg-black/40 backdrop-blur-2xl overflow-hidden isolate shadow-[0_20px_100px_rgba(0,0,0,0.5)] flex items-center justify-center group pointer-events-auto">
           <div className="absolute inset-[-2px] bg-gradient-to-tr from-accent/20 via-transparent to-purple-500/20 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
           <iframe
             src="https://www.youtube.com/embed/x78PnPd-V-A?autoplay=1&mute=1&loop=1&playlist=x78PnPd-V-A&controls=0&showinfo=0&rel=0"
