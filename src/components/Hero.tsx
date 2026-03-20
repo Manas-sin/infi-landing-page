@@ -10,11 +10,26 @@ const fadeUp = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.15, duration: 0.7, ease: "easeOut" as const },
+    transition: { delay: i * 0.15 + 0.5, duration: 0.7, ease: "easeOut" as const },
   }),
 };
 
-export default function Hero() {
+const headlineContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.04, delayChildren: 0.3 },
+  },
+};
+
+const letterAnim = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
+};
+
+export default function Hero({ isVisible = true }: { isVisible?: boolean }) {
+  const line1 = "Padhai ka naya".split("");
+  const line2 = "companion.".split("");
   return (
     <section
       id="download"
@@ -47,7 +62,7 @@ export default function Hero() {
           custom={0}
           variants={fadeUp}
           initial="hidden"
-          animate="visible"
+          animate={isVisible ? "visible" : "hidden"}
           className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-accent/8 border border-accent/15 text-[13px] text-accent font-medium mb-6"
         >
           <span
@@ -58,22 +73,32 @@ export default function Hero() {
         </motion.div>
 
         <motion.h1
-          custom={1}
-          variants={fadeUp}
+          variants={headlineContainer}
           initial="hidden"
-          animate="visible"
-          className="font-heading text-[clamp(36px,6vw,64px)] font-extrabold leading-[1.1] mb-5 max-w-[700px]"
+          animate={isVisible ? "visible" : "hidden"}
+          className="font-heading text-[clamp(36px,6vw,64px)] font-extrabold leading-[1.1] mb-5 max-w-[700px] flex flex-col items-center"
         >
-          Padhai ka naya
-          <br />
-          <span className="gradient-text">companion.</span>
+          <div>
+            {line1.map((char, i) => (
+              <motion.span key={`l1-${i}`} variants={letterAnim} className="inline-block">
+                {char === " " ? "\u00A0" : char}
+              </motion.span>
+            ))}
+          </div>
+          <span className="gradient-text mt-1">
+            {line2.map((char, i) => (
+              <motion.span key={`l2-${i}`} variants={letterAnim} className="inline-block">
+                {char}
+              </motion.span>
+            ))}
+          </span>
         </motion.h1>
 
         <motion.p
           custom={2}
           variants={fadeUp}
           initial="hidden"
-          animate="visible"
+          animate={isVisible ? "visible" : "hidden"}
           className="text-[clamp(16px,2vw,20px)] text-text-2 max-w-[520px] leading-relaxed mb-10 mx-auto"
         >
           Infi is your AI study buddy that talks, listens, and solves with you —
@@ -84,7 +109,7 @@ export default function Hero() {
           custom={3}
           variants={fadeUp}
           initial="hidden"
-          animate="visible"
+          animate={isVisible ? "visible" : "hidden"}
           className="flex gap-4 flex-wrap justify-center mb-8"
         >
           <a
@@ -131,7 +156,7 @@ export default function Hero() {
           custom={4}
           variants={fadeUp}
           initial="hidden"
-          animate="visible"
+          animate={isVisible ? "visible" : "hidden"}
           className="text-[13px] text-text-3"
         >
           Free to start <span className="text-accent font-semibold">⚡</span>{" "}

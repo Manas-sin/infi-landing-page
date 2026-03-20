@@ -29,9 +29,9 @@ export default function PageWrapper() {
             position: "fixed",
             inset: 0,
             zIndex: 197,
-            background: "#060610",
-            opacity: 1,
-            transition: "opacity 0.8s ease 2.5s",
+            background: "#00bfa5",
+            opacity: pageVisible ? 0 : 1,
+            transition: "opacity 0.8s ease 0s",
             pointerEvents: "none",
           }}
         />
@@ -61,7 +61,7 @@ export default function PageWrapper() {
             transition: "opacity 0.45s ease 0.5s, transform 0.45s ease 0.5s",
           }}
         >
-          <Hero />
+          <Hero isVisible={pageVisible} />
         </div>
 
         <div

@@ -112,31 +112,31 @@ body {
 .loader-aurora-blob-1 {
   width: 700px; height: 700px;
   top: -20%; left: -15%;
-  background: radial-gradient(circle, rgba(0,229,255,0.18), transparent 65%);
+  background: radial-gradient(circle, rgba(0,229,255,0.06), transparent 65%);
   --duration: 14s; --delay: 0s;
 }
 .loader-aurora-blob-2 {
   width: 600px; height: 600px;
   bottom: -20%; right: -10%;
-  background: radial-gradient(circle, rgba(179,136,255,0.15), transparent 65%);
+  background: radial-gradient(circle, rgba(179,136,255,0.05), transparent 65%);
   --duration: 16s; --delay: -4s;
 }
 .loader-aurora-blob-3 {
   width: 500px; height: 500px;
   top: 30%; left: 40%;
-  background: radial-gradient(circle, rgba(0,191,165,0.12), transparent 65%);
+  background: radial-gradient(circle, rgba(0,191,165,0.02), transparent 65%);
   --duration: 18s; --delay: -8s;
 }
 .loader-aurora-blob-4 {
   width: 400px; height: 400px;
   top: 10%; right: 20%;
-  background: radial-gradient(circle, rgba(0,229,255,0.10), transparent 65%);
+  background: radial-gradient(circle, rgba(0,229,255,0.03), transparent 65%);
   --duration: 20s; --delay: -2s;
 }
 .loader-aurora-blob-5 {
   width: 350px; height: 350px;
   bottom: 15%; left: 15%;
-  background: radial-gradient(circle, rgba(179,136,255,0.10), transparent 65%);
+  background: radial-gradient(circle, rgba(179,136,255,0.03), transparent 65%);
   --duration: 15s; --delay: -6s;
 }
 @keyframes auroraFloat {
@@ -164,31 +164,28 @@ body {
 .loader-orb-1 {
   width: 280px; height: 280px;
   top: 5%; left: 8%;
-  background: radial-gradient(circle, rgba(0,229,255,0.07), transparent 70%);
+  background: radial-gradient(circle, rgba(0,229,255,0.015), transparent 70%);
   --duration: 10s; --delay: 0s;
 }
 .loader-orb-2 {
   width: 220px; height: 220px;
   bottom: 10%; right: 5%;
-  background: radial-gradient(circle, rgba(179,136,255,0.08), transparent 70%);
+  background: radial-gradient(circle, rgba(179,136,255,0.015), transparent 70%);
   --duration: 12s; --delay: -3s;
 }
 .loader-orb-3 {
-  width: 180px; height: 180px;
-  top: 60%; left: 5%;
-  background: radial-gradient(circle, rgba(0,191,165,0.06), transparent 70%);
-  --duration: 9s; --delay: -5s;
+  display: none;
 }
 .loader-orb-4 {
   width: 160px; height: 160px;
   top: 8%; right: 30%;
-  background: radial-gradient(circle, rgba(0,229,255,0.05), transparent 70%);
+  background: radial-gradient(circle, rgba(0,229,255,0.01), transparent 70%);
   --duration: 11s; --delay: -7s;
 }
 .loader-orb-5 {
   width: 200px; height: 200px;
   bottom: 30%; right: 15%;
-  background: radial-gradient(circle, rgba(179,136,255,0.06), transparent 70%);
+  background: radial-gradient(circle, rgba(179,136,255,0.01), transparent 70%);
   --duration: 13s; --delay: -2s;
 }
 @keyframes orbFloat {
@@ -229,6 +226,20 @@ body {
   z-index: 2;
   background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(3,3,6,0.6) 100%);
   pointer-events: none;
+}
+
+/* ---- Color overlay for zoom transition ---- */
+.loader-color-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  background: radial-gradient(circle at center, rgba(0,229,255,0.4) 0%, rgba(0,191,165,0.2) 30%, rgba(6,6,16,0.8) 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.loader-color-overlay.active {
+  opacity: 1;
 }
 
 /* ---- Spark burst — radial light rays ---- */
@@ -357,12 +368,10 @@ body {
   overflow: visible;
   letter-spacing: -0.02em;
   text-shadow:
-    0 0 4px rgba(0,229,255,1),
-    0 0 14px rgba(0,229,255,0.95),
-    0 0 30px rgba(0,229,255,0.8),
-    0 0 60px rgba(0,229,255,0.5),
-    0 0 100px rgba(0,229,255,0.25);
-  filter: drop-shadow(0 0 18px rgba(0,229,255,0.7));
+    0 0 4px rgba(0,229,255,0.8),
+    0 0 10px rgba(0,229,255,0.6),
+    0 0 20px rgba(0,229,255,0.4);
+  filter: drop-shadow(0 0 8px rgba(0,229,255,0.5));
   opacity: 0;
   will-change: opacity;
 }
@@ -386,15 +395,15 @@ body {
   position: absolute;
   width: 45px;
   height: 45px;
-  top: -2px;
+  top: 0;
   left: 48%;
-  transform: translateX(-50%) translateY(0);
+  transform: translate(-50%, 0);
   border-radius: 50%;
   background: radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95), #00e5ff 50%, rgba(0,0,0,0) 100%);
   box-shadow: 0 0 30px #00e5ffcc, 0 0 60px #00e5ff88, 0 0 90px #00e5ff44;
   opacity: 1;
   z-index: 1000;
-  will-change: transform, top;
+  will-change: transform;
   pointer-events: none;
 }
 
@@ -430,6 +439,6 @@ body {
   position: fixed;
   inset: 0;
   z-index: 197;
-  background: #060610;
+  background: radial-gradient(circle at center, rgba(0,229,255,0.15) 0%, rgba(6,6,16,1) 60%);
   transition: opacity 0.8s ease 2.8s;
 }
