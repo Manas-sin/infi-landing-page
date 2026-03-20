@@ -30,79 +30,90 @@ const faqs = [
   },
 ];
 
-function FAQItem({ q, a }: { q: string; a: string }) {
+function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-glass-border">
+    <motion.div 
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      className="border-b border-white/10 overflow-hidden w-full group"
+    >
       <button
         onClick={() => setOpen(!open)}
-        className="w-full bg-transparent border-none cursor-pointer py-6 flex items-center justify-between font-heading text-base font-medium text-text-1 text-left hover:text-accent transition-colors"
+        className="w-full bg-transparent border-none cursor-pointer py-10 md:py-14 flex items-center justify-between font-heading text-[clamp(24px,3vw,44px)] font-semibold text-text-1 text-left hover-target relative"
       >
-        {q}
-        <motion.svg
-          animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
-          className="w-6 h-6 shrink-0 text-text-3"
-          style={{ color: open ? "#00e5ff" : undefined }}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
+        {/* Hover Background Layer */}
+        <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl" />
+        
+        <span className="group-hover:text-accent transition-colors duration-500 pr-10">{q}</span>
+        
+        <motion.div
+          animate={{ rotate: open ? 45 : 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="w-10 h-10 md:w-14 md:h-14 shrink-0 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-accent group-hover:border-accent group-hover:text-bg-1 transition-colors duration-500"
         >
-          <polyline points="6 9 12 15 18 9" />
-        </motion.svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </motion.div>
       </button>
+
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.35, ease: "easeInOut" }}
-            className="overflow-hidden"
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="pb-6 text-[15px] text-text-2 leading-[1.7]">{a}</p>
+            <div className="pb-10 md:pb-16 text-[clamp(18px,1.5vw,22px)] text-text-2 leading-[1.8] max-w-[800px] w-[90%] font-light">
+              {a}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
 
 export default function FAQ() {
   return (
-    <section id="faq" className="py-[100px] px-6 bg-bg-2">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.6 }}
-        className="font-heading text-xs font-semibold uppercase tracking-[2px] text-accent mb-3 text-center"
-      >
-        FAQ
-      </motion.div>
-      <motion.h2
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        className="font-heading text-[clamp(28px,4vw,44px)] font-bold text-center mb-16 leading-tight"
-      >
-        Common questions
-      </motion.h2>
+    <section id="faq" className="py-[150px] px-6 md:px-12 bg-bg-2 relative overflow-hidden flex flex-col items-center">
+      
+      {/* Background Graphic */}
+      <div className="absolute top-[20%] left-[-10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[150px] pointer-events-none" />
 
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="max-w-[680px] mx-auto"
-      >
-        {faqs.map((faq) => (
-          <FAQItem key={faq.q} q={faq.q} a={faq.a} />
-        ))}
-      </motion.div>
+      <div className="w-full max-w-[1400px]">
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="font-heading text-sm font-semibold uppercase tracking-[3px] text-accent mb-6"
+        >
+          FAQ
+        </motion.div>
+        
+        <motion.h2
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="font-heading text-[clamp(50px,7vw,100px)] font-black mb-20 leading-[1] tracking-tight"
+        >
+          Got doubts?
+        </motion.h2>
+
+        <div className="w-full flex flex-col border-t border-white/10">
+          {faqs.map((faq, index) => (
+            <FAQItem key={faq.q} q={faq.q} a={faq.a} index={index} />
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

@@ -8,6 +8,7 @@ import Features from "./Features";
 import Demo from "./Demo";
 import FAQ from "./FAQ";
 import Footer from "./Footer";
+import StoryDot from "./StoryDot";
 
 export default function PageWrapper() {
   const [loading, setLoading] = useState(true);
@@ -103,6 +104,9 @@ export default function PageWrapper() {
         >
           <Footer />
         </div>
+        
+        {/* The Traveling Story Dot */}
+        {pageVisible && <StoryDot />}
       </div>
     </>
   );

@@ -39,6 +39,9 @@ export const metadata: Metadata = {
     "Infi is your AI study buddy that talks, listens, and solves with you — in the language you actually think in. Class 6–12, CBSE, ICSE, State Boards.",
 };
 
+import SmoothScroll from "@/components/SmoothScroll";
+import CustomCursor from "@/components/CustomCursor";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -47,7 +50,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${sora.variable} ${outfit.variable} ${dancingScript.variable} ${playfair.variable} ${syne.variable} antialiased`}>
-        {children}
+        <CustomCursor />
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );
