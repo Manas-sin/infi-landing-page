@@ -7,7 +7,7 @@ import * as THREE from "three";
 
 function ParticleField() {
   const meshRef = useRef<THREE.Points>(null);
-  const count = 600;
+  const count = 250; // Optimized for mobile
 
   const [positions, colors] = useMemo(() => {
     const pos = new Float32Array(count * 3);
@@ -98,7 +98,7 @@ export default function HeroScene() {
         <Stars
           radius={50}
           depth={80}
-          count={1500}
+          count={500} // Optimized
           factor={3}
           saturation={0}
           fade

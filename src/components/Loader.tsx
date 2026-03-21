@@ -80,15 +80,7 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
             scaleY: 1.25, // Stretch vertically while falling
             scaleX: 0.8,  // Condense horizontally
             transformOrigin: "bottom center", // Crucial: Pin to the floor for flat impact
-            onUpdate: function() {
-              const progress = this.progress();
-              const color = progress < 0.3 ? "#00e5ff" : progress < 0.6 ? "#00bfa5" : "#ffb300";
-              const glow = progress < 0.3 ? "0 0 30px #00e5ffcc, 0 0 60px #00e5ff88"
-                : progress < 0.6 ? "0 0 25px #00bfa5aa, 0 0 50px #00bfa566"
-                : "0 0 20px #ffb30099, 0 0 40px #ffb30055";
-              dotWrapper.style.background = `radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95), ${color} 50%, rgba(0,0,0,0) 100%)`;
-              dotWrapper.style.boxShadow = glow;
-            }
+            // Removed expensive per-frame background and boxShadow updates for performance
           }
         )
 
@@ -174,8 +166,6 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
         .to(dotWrapper, {
           scaleY: 1,
           scaleX: 1,
-          background: "#00bfa5", // Start turning teal instantly
-          boxShadow: "none",
           duration: 0.1,
           ease: "back.out(3)" // Dramatic cartoon pop
         }, "expandLight+=0.27")

@@ -187,7 +187,7 @@ export default function Features() {
         style={{ y: bgY1 }}
         animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-[#00e5ff]/10 blur-[120px] pointer-events-none z-0"
+        className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-[#00e5ff]/10 blur-[60px] pointer-events-none z-0 transform-gpu"
       />
 
       {/* Element 2: Glassmorphic geometric diamond floating */}
@@ -195,9 +195,9 @@ export default function Features() {
         style={{ y: bgY2 }}
         animate={{ rotate: [0, 180, 360] }}
         transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-        className="absolute top-[60%] right-[10%] w-[120px] h-[120px] pointer-events-none z-0"
+        className="absolute top-[60%] right-[10%] w-[120px] h-[120px] pointer-events-none z-0 transform-gpu"
       >
-        <div className="w-full h-full rounded-[30px] border border-white/10 bg-white/5 backdrop-blur-md shadow-[0_0_40px_rgba(179,136,255,0.1)] transform rotate-45" />
+        <div className="w-full h-full rounded-[30px] border border-white/10 bg-white/5 backdrop-blur-md shadow-[0_0_40px_rgba(179,136,255,0.1)] transform rotate-45 transform-gpu" />
       </motion.div>
 
       {/* Element 3: Tiny high-tech crosshair accent */}
@@ -205,7 +205,7 @@ export default function Features() {
         style={{ y: bgY3 }}
         animate={{ rotate: [0, -90] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[15%] right-[25%] opacity-40 pointer-events-none z-0"
+        className="absolute top-[15%] right-[25%] opacity-40 pointer-events-none z-0 transform-gpu"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b388ff" strokeWidth="1" strokeLinecap="round">
           <line x1="12" y1="2" x2="12" y2="22" />

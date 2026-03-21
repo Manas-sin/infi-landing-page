@@ -101,8 +101,8 @@ export default function StoryDot() {
         <motion.div 
           animate={{ scale: [1, 1.2, 1] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          style={{ backgroundColor: color04 as any, width: "300px", height: "300px" }}
-          className="rounded-full blur-[100px] mix-blend-screen"
+          style={{ backgroundColor: color04 as any, width: "300px", height: "300px", willChange: "transform" }}
+          className="rounded-full blur-[60px] mix-blend-screen transform-gpu"
         />
       </motion.div>
 
