@@ -27,12 +27,12 @@ export default function Footer() {
         <motion.div 
           initial={{ opacity: 0 }} 
           whileInView={{ opacity: 1 }} 
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           className="w-full md:w-1/3 flex flex-col gap-6"
         >
           <motion.div 
-            initial={{ opacity: 0, y: 30, filter: "blur(5px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="font-heading text-4xl font-black text-transparent bg-clip-text bg-linear-to-r from-accent to-teal"
@@ -42,7 +42,7 @@ export default function Footer() {
           <motion.p 
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-50px" }}
             className="text-xl text-text-2 leading-[1.6] font-light max-w-[350px]"
             variants={{
               visible: { transition: { staggerChildren: 0.03, delayChildren: 0.1 } },
@@ -54,8 +54,8 @@ export default function Footer() {
                 key={i}
                 className="inline-block mr-[0.25em]"
                 variants={{
-                  hidden: { opacity: 0, y: 15, filter: "blur(4px)" },
-                  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+                  hidden: { opacity: 0, y: 15 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
                 }}
               >
                 {word}
@@ -93,10 +93,10 @@ export default function Footer() {
           ].map((col, i) => (
             <motion.div
               key={col.title}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.1 * (i + 1), ease: [0.16, 1, 0.3, 1] }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: 0.05 * (i + 1), ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-col"
             >
               <h4 className="font-heading text-xs font-bold uppercase tracking-[2px] text-text-3 mb-6">
@@ -120,21 +120,16 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Extreme Massive Text Footer Parallax - beautifully illuminates at the end of the scroll journey */}
+      {/* Extreme Massive Text Footer Parallax - optimized for mobile without expensive textShadow */}
       <motion.div 
         style={{ y: yBg, scale: scaleText }}
-        className="w-full flex justify-center items-end select-none pointer-events-none mt-10 overflow-hidden px-4 relative z-0 max-w-[100vw]"
+        className="w-full flex justify-center items-end select-none pointer-events-none mt-10 overflow-hidden px-4 relative z-0 max-w-[100vw] transform-gpu"
       >
         <motion.span 
           style={{ 
-            opacity: useTransform(scrollYProgress, [0.8, 0.95, 1], [0.03, 0.1, 1]), // Dramatically lights up
-            textShadow: useTransform(
-              scrollYProgress, 
-              [0.9, 1], 
-              ["0px 0px 0px rgba(41, 121, 255, 0)", "0px 0px 150px rgba(41, 121, 255, 0.8)"]
-            )
+            opacity: useTransform(scrollYProgress, [0.8, 0.95, 1], [0.1, 0.4, 1])
           }}
-          className="font-heading font-black text-[clamp(150px,25vw,400px)] leading-[0.7] tracking-tighter text-white whitespace-nowrap uppercase transition-colors duration-500"
+          className="font-heading font-black text-[clamp(150px,25vw,400px)] leading-[0.7] tracking-tighter text-white whitespace-nowrap uppercase drop-shadow-[0_0_20px_rgba(41,121,255,0.4)]"
         >
           INFI
         </motion.span>

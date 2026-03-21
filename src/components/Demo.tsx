@@ -193,9 +193,19 @@ export default function Demo() {
           </motion.div>
         </div>
 
-        {/* TEXT CONTENT */}
-        <div className="demo-pill relative z-10 font-heading text-sm font-semibold uppercase tracking-[3px] text-accent mb-6 bg-accent/10 border border-accent/30 px-6 py-2 rounded-full shadow-[0_0_20px_rgba(0,229,255,0.15)] backdrop-blur-md">
-          See it in action
+        {/* ARTISTIC TEXT CONTENT */}
+        <div className="demo-pill relative z-10 flex flex-col items-center mb-6">
+          <div className="flex items-center gap-4 mb-2 opacity-90">
+            <span className="w-12 h-[1px] bg-gradient-to-r from-transparent to-accent" />
+            <span className="w-2 h-2 rounded-full bg-accent animate-pulse shadow-[0_0_12px_#00e5ff]" />
+            <span className="w-12 h-[1px] bg-gradient-to-l from-transparent to-accent" />
+          </div>
+          <h3 
+            className="text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 font-light text-[clamp(32px,5vw,70px)] tracking-tight capitalize drop-shadow-[0_0_40px_rgba(0,229,255,0.2)]"
+            style={{ fontFamily: "var(--font-display), serif", fontStyle: "italic" }}
+          >
+            See it in action.
+          </h3>
         </div>
         
         <h2 className="relative z-10 font-heading text-[clamp(40px,6vw,90px)] font-black text-center mb-6 leading-[1.05] tracking-tight text-white drop-shadow-2xl" style={{ perspective: "1000px" }}>
