@@ -35,9 +35,8 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
       const brandI = document.querySelector(".loader-brand-i") as HTMLElement;
       const brandRect = brandI?.getBoundingClientRect();
 
-      // We now rely on pure CSS (left percentage in globals.css) for horizontal alignment
+      // We now rely on pure CSS (left and top percentage in globals.css) for alignment
       // so the dot remains perfectly centered scaled on the "i" even on resize.
-      dotWrapper.style.top = "auto"; // Let GSAP handle Y position
 
       // ===== CONTROL SETTINGS =====
       // The dot's resting place directly on the 'i' will be conceptually `y: 0`. 

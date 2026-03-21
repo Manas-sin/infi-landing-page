@@ -139,13 +139,13 @@ export default function Hero({ isVisible = true }: { isVisible?: boolean }) {
         
         {/* Core tracking blob - Bright Teal */}
         <div 
-          className="aurora-1 absolute top-1/2 left-1/2 w-[70vw] h-[70vw] max-w-[800px] max-h-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.55] mix-blend-screen blur-[120px] will-change-transform"
+          className="aurora-1 absolute top-1/2 left-1/2 w-[70vw] h-[70vw] max-w-[800px] max-h-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.55] mix-blend-screen blur-[120px] will-change-transform transform-gpu"
           style={{ background: "radial-gradient(circle at center, #00e5ff 0%, transparent 60%)" }}
         />
         
         {/* Slower floating secondary blob - Deep Violet */}
         <div 
-          className="aurora-2 absolute top-1/2 left-1/2 w-[80vw] h-[80vw] max-w-[1000px] max-h-[1000px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.35] mix-blend-screen blur-[140px] will-change-transform"
+          className="aurora-2 absolute top-1/2 left-1/2 w-[80vw] h-[80vw] max-w-[1000px] max-h-[1000px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.35] mix-blend-screen blur-[140px] will-change-transform transform-gpu"
           style={{ background: "radial-gradient(circle at center, #b388ff 0%, transparent 60%)" }}
         />
         
@@ -166,7 +166,7 @@ export default function Hero({ isVisible = true }: { isVisible?: boolean }) {
         initial={{ opacity: 0, scale: 0, rotate: 0 }} 
         animate={{ opacity: 0.3, scale: 1, rotate: 180 }} 
         transition={{ delay: 1, duration: 2.5, ease: "easeOut" }}
-        className="float-1 absolute top-[15%] left-[8%] w-48 h-48 md:w-64 md:h-64 rounded-full border-[1px] border-accent/40 z-10 pointer-events-none mix-blend-screen hidden lg:block"
+        className="float-1 absolute top-[15%] left-[8%] w-48 h-48 md:w-64 md:h-64 rounded-full border-[1px] border-accent/40 z-10 pointer-events-none mix-blend-screen hidden lg:block will-change-transform transform-gpu"
         style={{ borderStyle: "dashed" }}
       />
       
@@ -177,7 +177,7 @@ export default function Hero({ isVisible = true }: { isVisible?: boolean }) {
         initial={{ opacity: 0, rotate: 90 }} 
         animate={{ opacity: 0.15, rotate: 0 }} 
         transition={{ delay: 1.4, duration: 2, ease: "easeOut" }}
-        className="float-3 absolute top-[15%] right-[5%] z-0 pointer-events-none hidden lg:block"
+        className="float-3 absolute top-[15%] right-[5%] z-0 pointer-events-none hidden lg:block will-change-transform transform-gpu"
       >
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }}>
           <svg width="250" height="250" viewBox="0 0 100 100" fill="none" stroke="#b388ff" strokeWidth="0.5">

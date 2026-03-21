@@ -401,8 +401,11 @@ body {
   position: absolute;
   width: clamp(15px, 3.5vw, 45px); /* Scales proportionally with the "i" text clamp */
   height: clamp(15px, 3.5vw, 45px);
-  top: 9%; /* Position it 9% down the bounding box so y:0 lands right on the letter */
-  left: 46.5%; /* Lock exact visual center of the lowercase "ı" visually over all breakpoints */
+  
+  /* Desktop alignment (Default) */
+  top: 31%; 
+  left: 46.5%; 
+  
   transform: translate(-50%, 0);
   border-radius: 50%;
   background: radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95), #00e5ff 50%, rgba(0,0,0,0) 100%);
@@ -410,6 +413,22 @@ body {
   opacity: 1;
   z-index: 1000;
   pointer-events: none;
+}
+
+/* Tablet alignment */
+@media (max-width: 1024px) {
+  .loader-dot-wrapper {
+    top: 33%; 
+    left: 46.5%;
+  }
+}
+
+/* Mobile alignment */
+@media (max-width: 768px) {
+  .loader-dot-wrapper {
+    top: 35%; 
+    left: 46.5%;
+  }
 }
 
 .loader-brand-i {

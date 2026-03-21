@@ -3,7 +3,20 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
+
+// Helper to split text into manageable word blocks for GSAP
+const SplitText = ({ text, className = "" }: { text: string; className?: string }) => {
+  return (
+    <span className={`inline-block ${className}`}>
+      {text.split(" ").map((word, i) => (
+        <span key={i} className="inline-block overflow-hidden mr-[0.25em] align-top">
+          <span className="split-word inline-block will-change-transform">{word}</span>
+        </span>
+      ))}
+    </span>
+  );
+};
 
 export default function Demo() {
   const introRef = useRef<HTMLDivElement>(null);
@@ -15,6 +28,19 @@ export default function Demo() {
     offset: ["start end", "end start"]
   });
 
+  // Interactive mouse values for the logical node graphics
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 40, damping: 20 });
+  const springY = useSpring(mouseY, { stiffness: 40, damping: 20 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 60; // range -30 to 30
+    const y = (e.clientY / window.innerHeight - 0.5) * 60;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
   // Parallax Values for the Premium Background Objects
   const bgY1 = useTransform(scrollYProgress, [0, 1], ["-15%", "15%"]);
   const bgY2 = useTransform(scrollYProgress, [0, 1], ["20%", "-40%"]);
@@ -25,7 +51,39 @@ export default function Demo() {
 
     if (!introRef.current || !videoRef.current) return;
 
-    // Fade out and scale up "Padhai feels different" as you scroll PAST it
+    // Advanced Entrance Animation Timeline for Demo Intro Text
+    const demoPill = introRef.current.querySelector(".demo-pill");
+    const demoWords = introRef.current.querySelectorAll(".split-word");
+
+    const tlEnter = gsap.timeline({
+      scrollTrigger: {
+        trigger: introRef.current,
+        start: "top 80%", // Start animating when it is entering
+        end: "top 35%",   // Finishes when comfortably on screen
+        scrub: 1,
+      }
+    });
+
+    // Animate Pill first
+    tlEnter.fromTo(demoPill, 
+      { opacity: 0, scale: 0.8, y: 30 },
+      { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "power2.out" }
+    )
+    // Then stagger the text words upward like a wave
+    .fromTo(demoWords,
+      { y: "150%", rotateZ: 4, opacity: 0 },
+      {
+        y: "0%", 
+        rotateZ: 0, 
+        opacity: 1, 
+        stagger: 0.03, // Tighter stagger for fluidity
+        duration: 0.7, 
+        ease: "power3.out"
+      },
+      "-=0.2"
+    );
+
+    // Fade out and scale up everything smoothly together as you scroll PAST it
     gsap.to(introRef.current, {
       scrollTrigger: {
         trigger: introRef.current,
@@ -34,8 +92,8 @@ export default function Demo() {
         scrub: true,
       },
       opacity: 0,
-      scale: 1.2,
-      y: 50,
+      scale: 1.1,
+      y: 100,
     });
 
     // Fade in the Video as it scrolls INTO view
@@ -100,16 +158,52 @@ export default function Demo() {
       {/* Slide 4 equivalent: Text Intro Section */}
       <section 
         ref={introRef}
+        onMouseMove={handleMouseMove}
         className="h-screen w-full flex flex-col items-center justify-center px-4 relative z-10"
       >
-        <div className="font-heading text-sm font-semibold uppercase tracking-[3px] text-accent mb-6 bg-accent/10 border border-accent/30 px-6 py-2 rounded-full shadow-[0_0_20px_rgba(0,229,255,0.15)] backdrop-blur-md">
+        {/* LOGICAL GRAPHICS BACKGROUND (Interacts with Mouse) */}
+        <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-[0.35]">
+          <motion.div 
+            style={{ x: springX, y: springY }}
+            className="relative w-[70vw] h-[70vw] max-w-[800px] max-h-[800px] flex items-center justify-center"
+          >
+            {/* Outer dotted logic ring */}
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+              className="absolute inset-0 rounded-full border border-white/10 border-dashed"
+            />
+            {/* Inner steady logic ring */}
+            <motion.div 
+              animate={{ rotate: -360 }}
+              transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+              className="absolute w-[60%] h-[60%] rounded-full border border-[#00e5ff]/20"
+            >
+              {/* Nodes representing clearing doubts & checking homework */}
+              <div className="absolute top-0 right-[20%] w-3 h-3 bg-accent rounded-full shadow-[0_0_15px_#00e5ff] transform -translate-y-1/2" />
+              <div className="absolute bottom-[-1px] left-[30%] w-3 h-3 bg-violet rounded-full shadow-[0_0_15px_#b388ff] transform translate-y-1/2" />
+              <div className="absolute top-[40%] left-[-1px] w-2 h-2 bg-teal rounded-full shadow-[0_0_10px_#00bfa5] transform -translate-x-1/2" />
+            </motion.div>
+            
+            {/* Connecting logic path across the center */}
+            <svg className="absolute w-[80%] h-[80%] text-white/5" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.5">
+              <path d="M10,50 Q40,20 50,50 T90,50" />
+              <path d="M50,10 Q20,40 50,50 T50,90" />
+            </svg>
+          </motion.div>
+        </div>
+
+        {/* TEXT CONTENT */}
+        <div className="demo-pill relative z-10 font-heading text-sm font-semibold uppercase tracking-[3px] text-accent mb-6 bg-accent/10 border border-accent/30 px-6 py-2 rounded-full shadow-[0_0_20px_rgba(0,229,255,0.15)] backdrop-blur-md">
           See it in action
         </div>
-        <h2 className="font-heading text-[clamp(40px,6vw,90px)] font-black text-center mb-6 leading-[1.05] tracking-tight text-white drop-shadow-2xl">
-          Padhai feels different
+        
+        <h2 className="relative z-10 font-heading text-[clamp(40px,6vw,90px)] font-black text-center mb-6 leading-[1.05] tracking-tight text-white drop-shadow-2xl" style={{ perspective: "1000px" }}>
+          <SplitText text="Padhai feels different" />
         </h2>
-        <p className="text-[clamp(16px,2vw,24px)] text-text-2 text-center max-w-[600px] leading-relaxed font-light">
-          Watch how students use Infi to clear doubts, check homework, and entirely bypass frustration.
+        
+        <p className="relative z-10 text-[clamp(16px,2vw,24px)] text-text-2 text-center max-w-[700px] leading-relaxed font-light">
+          <SplitText text="Watch how students use Infi to clear doubts, check homework, and entirely bypass frustration." />
         </p>
       </section>
 
@@ -118,7 +212,7 @@ export default function Demo() {
         ref={videoRef}
         className="min-h-screen w-full flex items-center justify-center relative z-20 py-24"
       >
-        <div className="relative w-[90vw] max-w-[1100px] aspect-video rounded-[32px] md:rounded-[48px] border border-glass-border bg-black/40 backdrop-blur-2xl overflow-hidden isolate shadow-[0_20px_100px_rgba(0,0,0,0.5)] flex items-center justify-center group pointer-events-auto">
+        <div className="relative w-[90vw] max-w-[1100px] aspect-video rounded-[32px] md:rounded-[48px] border border-glass-border bg-black/40 backdrop-blur-2xl overflow-hidden isolate shadow-[0_20px_100px_rgba(0,0,0,0.5)] flex items-center justify-center group pointer-events-auto will-change-transform transform-gpu">
           <div className="absolute inset-[-2px] bg-gradient-to-tr from-accent/20 via-transparent to-purple-500/20 rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
           <iframe
             src="https://www.youtube.com/embed/x78PnPd-V-A?autoplay=1&mute=1&loop=1&playlist=x78PnPd-V-A&controls=0&showinfo=0&rel=0"

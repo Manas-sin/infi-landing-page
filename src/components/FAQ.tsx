@@ -1,7 +1,47 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const wordVariants = {
+  hidden: { opacity: 0, y: 50, rotateX: -20 },
+  show: { 
+    opacity: 1, 
+    y: 0, 
+    rotateX: 0,
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } 
+  },
+};
+
+// Helper to split text into manageable word/character blocks with Framer Motion slide-up variants
+const SplitText = ({ text, className = "" }: { text: string; className?: string }) => {
+  return (
+    <motion.span 
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-50px" }}
+      className={`inline-block ${className}`}
+      style={{ perspective: "1000px" }}
+    >
+      {text.split(" ").map((word, i) => (
+        <motion.span key={i} variants={wordVariants} className="inline-block mr-[0.25em] will-change-transform">
+          {word}
+        </motion.span>
+      ))}
+    </motion.span>
+  );
+};
 
 const faqs = [
   {
@@ -81,13 +121,61 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
 }
 
 export default function FAQ() {
-  return (
-    <section id="faq" className="py-[150px] px-6 md:px-12 bg-bg-2 relative overflow-hidden flex flex-col items-center">
-      
-      {/* Background Graphic */}
-      <div className="absolute top-[20%] left-[-10%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[150px] pointer-events-none" />
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 45, damping: 25 });
+  const springY = useSpring(mouseY, { stiffness: 45, damping: 25 });
 
-      <div className="w-full max-w-[1400px]">
+  const handleMouseMove = (e: React.MouseEvent) => {
+    // Normalize mapping the cursor to -100 to 100 max travel
+    const x = (e.clientX / window.innerWidth - 0.5) * 200; 
+    const y = (e.clientY / window.innerHeight - 0.5) * 200;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  return (
+    <section id="faq" onMouseMove={handleMouseMove} className="py-[150px] px-6 md:px-12 bg-bg-2 relative overflow-hidden flex flex-col items-center">
+      
+      {/* Intelligent Interactive Radar Background Graphic */}
+      <div className="absolute top-[10%] -left-[20%] w-[600px] h-[600px] rounded-full pointer-events-none opacity-40 mix-blend-screen overflow-visible">
+        <motion.div 
+          style={{ x: springX, y: springY }}
+          className="relative w-full h-full flex items-center justify-center transform-gpu will-change-transform"
+        >
+          {/* Main glowing pulse */}
+          <motion.div 
+            animate={{ scale: [1, 1.4, 1], opacity: [0.2, 0, 0.2] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute inset-[-50px] bg-accent/20 rounded-full blur-[60px]" 
+          />
+          
+          {/* Radar Scanning Ring */}
+          <motion.div 
+            animate={{ rotate: 360 }}
+            transition={{ duration: 9, repeat: Infinity, ease: "linear" }}
+            className="absolute w-[80%] h-[80%] border-2 border-t-accent border-r-transparent border-b-transparent border-l-transparent rounded-full blur-[1px]"
+          />
+          <motion.div 
+            animate={{ rotate: -360 }}
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            className="absolute w-[95%] h-[95%] border border-t-violet border-r-transparent border-b-transparent border-l-transparent rounded-full opacity-60"
+          />
+          
+          {/* Dashed Target Rings */}
+          <div className="absolute w-[60%] h-[60%] border-2 border-[#00e5ff]/10 border-dashed rounded-full" />
+          <div className="absolute w-[30%] h-[30%] border border-[#b388ff]/10 rounded-full" />
+          <div className="absolute w-[10%] h-[10%] bg-accent/30 rounded-full shadow-[0_0_20px_#00e5ff]" />
+          
+          {/* Tracking Crosshair Network */}
+          <svg className="absolute w-[120%] h-[120%] text-[#00e5ff]/10" viewBox="0 0 100 100" fill="none">
+            <line x1="50" y1="0" x2="50" y2="100" stroke="currentColor" strokeWidth="0.2" />
+            <line x1="0" y1="50" x2="100" y2="50" stroke="currentColor" strokeWidth="0.2" />
+          </svg>
+        </motion.div>
+      </div>
+
+      <div className="w-full max-w-[1400px] relative z-10 block">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -97,16 +185,9 @@ export default function FAQ() {
         >
           FAQ
         </motion.div>
-        
-        <motion.h2
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="font-heading text-[clamp(50px,7vw,100px)] font-black mb-20 leading-[1] tracking-tight"
-        >
-          Got doubts?
-        </motion.h2>
+        <h2 className="font-heading text-[clamp(50px,7vw,100px)] font-black mb-20 leading-[1] tracking-tight relative drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]">
+          <SplitText text="Got doubts?" />
+        </h2>
 
         <div className="w-full flex flex-col border-t border-white/10">
           {faqs.map((faq, index) => (
