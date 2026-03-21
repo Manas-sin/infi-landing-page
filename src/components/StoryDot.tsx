@@ -12,14 +12,18 @@ export default function StoryDot() {
   }, []);
 
   // Soft, beautiful Story Colors transitioning organically
-  const dotColor = useTransform(
-    scrollYProgress,
-    [0, 0.25, 0.5, 0.75, 1],
-    ["#00e5ff", "#b388ff", "#00bfa5", "#ff4081", "#2979ff"]
-  );
+  // Color sequences map directly to the narrative arc (Cyan -> Violet -> Viridian -> Pink -> Blue)
+  const color1 = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75, 1], ["rgba(0,229,255,1)", "rgba(179,136,255,1)", "rgba(0,191,165,1)", "rgba(255,64,129,1)", "rgba(41,121,255,1)"]);
+  const color1alt = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75, 1], ["rgba(0,191,165,1)", "rgba(0,229,255,1)", "rgba(179,136,255,1)", "rgba(255,171,64,1)", "rgba(0,191,165,1)"]);
+  const color04 = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75, 1], ["rgba(0,229,255,0.4)", "rgba(179,136,255,0.4)", "rgba(0,191,165,0.4)", "rgba(255,64,129,0.4)", "rgba(41,121,255,0.4)"]);
+  const color015 = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75, 1], ["rgba(0,229,255,0.15)", "rgba(179,136,255,0.15)", "rgba(0,191,165,0.15)", "rgba(255,64,129,0.15)", "rgba(41,121,255,0.15)"]);
+  const color006 = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75, 1], ["rgba(0,229,255,0.06)", "rgba(179,136,255,0.06)", "rgba(0,191,165,0.06)", "rgba(255,64,129,0.06)", "rgba(41,121,255,0.06)"]);
 
-  // An intensely glowing shadow for the dot itself
-  const coreShadow = useMotionTemplate`0 0 30px 10px ${dotColor}80, 0 0 60px 20px ${dotColor}40`;
+  const haloBg = useMotionTemplate`radial-gradient(circle, ${color04}, ${color015}, transparent)`;
+  const shellBorder = useMotionTemplate`1px solid ${color015}`;
+  const shellShadow = useMotionTemplate`inset 0 0 12px ${color015}`;
+  const coreBg = useMotionTemplate`radial-gradient(circle at 35% 30%, rgba(255,255,255,0.95), ${color1} 40%, ${color1alt} 70%, transparent 100%)`;
+  const coreShadow = useMotionTemplate`0 0 20px ${color04}, 0 0 40px ${color015}`;
 
   // Create an elegant, sweeping S-curve path for the floating companion
   const pathLength = 12;
@@ -34,11 +38,13 @@ export default function StoryDot() {
   };
 
   // The dot floats all the way down to the footer
-  const yPath = buildPath(-5, 95); 
+  // It now starts at 55vh to align beautifully perfectly next to the "companion." text
+  const yPath = buildPath(55, 95); 
 
-  // Smooth elegant curving across the page. Lands near the center/left of the footer INFI text.
+  // Smooth, subtle elegant curving across the page. It now lingers luxuriously on the right side.
+  // Starting exactly on the right side of the screen (85vw)
   const xPath = [
-    50, 75, 25, 80, 20, 65, 35, 75, 25, 60, 30, 80, 50
+    85, 82, 88, 75, 80, 65, 70, 55, 60, 45, 50, 45, 50
   ]; 
 
   const progressSteps = Array.from({ length: 13 }, (_, i) => i / 12);
@@ -47,12 +53,12 @@ export default function StoryDot() {
 
   // --------------------------------------------------------
   // Apply a gentle Physics Spring so it follows the scroll 
-  // with a buttery smooth lag, like a floating fairy
+  // with an incredibly heavy, professional, "zero-gravity" lag
   // --------------------------------------------------------
-  const stiffness = 80;
+  const stiffness = 30; // Very soft spring, takes its time
   
-  const dotY = useSpring(rawYPos, { stiffness, damping: 25, mass: 1 });
-  const dotX = useSpring(rawXPos, { stiffness, damping: 25, mass: 1 });
+  const dotY = useSpring(rawYPos, { stiffness, damping: 20, mass: 1.5 });
+  const dotX = useSpring(rawXPos, { stiffness, damping: 20, mass: 1.5 });
 
   // Scale the physical dot
   const dotScale = useTransform(scrollYProgress, [0, 0.5, 0.95, 1], [0.8, 1, 0.9, 1.5]);
@@ -61,13 +67,18 @@ export default function StoryDot() {
   const auraScale = useTransform(scrollYProgress, [0, 0.9, 1], [1, 1, 5]);
   const auraOpacity = useTransform(scrollYProgress, [0, 0.9, 1], [0.3, 0.3, 0.6]);
 
-  // Fade out the physical dot slightly at the end if desired, or keep it bright
-  const opacity = useTransform(scrollYProgress, [0, 0.05, 0.95, 1], [0, 1, 1, 1]);
+  // Dot opacity remains 1 across the journey except for exit if needed
+  const opacity = useTransform(scrollYProgress, [0, 0.95, 1], [1, 1, 1]);
 
   if (!mounted) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[9999] overflow-visible">
+    <motion.div 
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: 1.8, duration: 1.5, ease: "easeOut" }} // Waits exactly for "companion." text to slide into place!
+      className="pointer-events-none fixed inset-0 z-[9999] overflow-visible"
+    >
       
       {/* 
         The Massive Ambient Light Aura 
@@ -90,7 +101,7 @@ export default function StoryDot() {
         <motion.div 
           animate={{ scale: [1, 1.2, 1] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          style={{ backgroundColor: dotColor, width: "300px", height: "300px" }}
+          style={{ backgroundColor: color04 as any, width: "300px", height: "300px" }}
           className="rounded-full blur-[100px] mix-blend-screen"
         />
       </motion.div>
@@ -110,19 +121,49 @@ export default function StoryDot() {
       >
         <motion.div
           animate={{ y: [0, -10, 0, 10, 0], x: [0, 4, -4, 3, 0] }}
-          transition={{ duration: 3, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
-          style={{ backgroundColor: dotColor, width: "24px", height: "24px", boxShadow: coreShadow }}
-          className="rounded-full flex items-center justify-center mix-blend-screen"
+          transition={{ duration: 4, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
+          style={{ width: "72px", height: "72px" }}
+          className="relative inline-flex flex-col items-center justify-center rounded-full pointer-events-auto"
         >
-          {/* Intense breathing white-hot core */}
+          {/* Exact Replica of spark-halo */}
           <motion.div 
-            animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="w-[50%] h-[50%] bg-white rounded-full blur-[1px] relative z-50" 
+            animate={{ scale: [1, 1.08, 1], opacity: [0.5, 0.65, 0.5] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -inset-[40%] rounded-full blur-[20px]" 
+            style={{ background: haloBg }}
+          />
+          
+          {/* Exact Replica of spark-shell (spark-full state) */}
+          <motion.div 
+            className="absolute inset-[8%] rounded-full backdrop-blur-[2px]"
+            style={{ 
+              background: color006, 
+              border: shellBorder,
+              boxShadow: shellShadow
+            }}
+          />
+          
+          {/* Exact Replica of spark-core (spark-full state) */}
+          <motion.div 
+            className="relative w-[55%] h-[55%] rounded-full z-10"
+            style={{ 
+              background: coreBg,
+              boxShadow: coreShadow
+            }}
+          />
+          
+          {/* Exact Replica of spark-highlight WITH 3D Parallax Reflection Tracking */}
+          <motion.div 
+            animate={{ 
+              x: [0, 15, -10, 8, 0], // The highlight drifts across the surface to simulate 3D rotation
+              y: [0, -5, 8, -4, 0]  
+            }}
+            transition={{ duration: 7, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
+            className="absolute top-[18%] left-[22%] w-[20%] h-[20%] rounded-full bg-white/70 blur-[2px] z-20"
           />
         </motion.div>
       </motion.div>
 
-    </div>
+    </motion.div>
   );
 }
