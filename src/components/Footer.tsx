@@ -24,14 +24,45 @@ export default function Footer() {
       <div className="w-full max-w-[1400px] px-6 md:px-12 flex flex-col md:flex-row justify-between items-start gap-16 mb-24 z-10">
         
         {/* Brand Left */}
-        <div className="w-full md:w-1/3 flex flex-col gap-6">
-          <div className="font-heading text-4xl font-black text-transparent bg-clip-text bg-linear-to-r from-accent to-teal">
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          whileInView={{ opacity: 1 }} 
+          viewport={{ once: true }}
+          className="w-full md:w-1/3 flex flex-col gap-6"
+        >
+          <motion.div 
+            initial={{ opacity: 0, y: 30, filter: "blur(5px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="font-heading text-4xl font-black text-transparent bg-clip-text bg-linear-to-r from-accent to-teal"
+          >
             infi
-          </div>
-          <p className="text-xl text-text-2 leading-[1.6] font-light max-w-[350px]">
-            Your AI study companion for Class 6–12. Voice, chat, photo check — padhai made entirely personal.
-          </p>
-        </div>
+          </motion.div>
+          <motion.p 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-xl text-text-2 leading-[1.6] font-light max-w-[350px]"
+            variants={{
+              visible: { transition: { staggerChildren: 0.03, delayChildren: 0.1 } },
+              hidden: {}
+            }}
+          >
+            {"Your AI study companion for Class 6–12. Voice, chat, photo check — padhai made entirely personal.".split(" ").map((word, i) => (
+              <motion.span
+                key={i}
+                className="inline-block mr-[0.25em]"
+                variants={{
+                  hidden: { opacity: 0, y: 15, filter: "blur(4px)" },
+                  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+                }}
+              >
+                {word}
+              </motion.span>
+            ))}
+          </motion.p>
+        </motion.div>
 
         {/* Link Columns Grid */}
         <div className="w-full md:w-2/3 grid grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-20">

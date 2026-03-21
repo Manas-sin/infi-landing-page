@@ -187,7 +187,7 @@ export default function Features() {
         style={{ y: bgY1 }}
         animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-[#00e5ff]/10 blur-[120px] pointer-events-none z-0"
+        className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-[#00e5ff]/10 blur-[120px] pointer-events-none z-0"
       />
 
       {/* Element 2: Glassmorphic geometric diamond floating */}

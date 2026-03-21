@@ -18,7 +18,7 @@ function ParticleField() {
     const palette = [cyan, violet, teal];
 
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 20;
+      pos[i * 3] = 2 + Math.random() * 15; // Only right side (x > 0)
       pos[i * 3 + 1] = (Math.random() - 0.5) * 20;
       pos[i * 3 + 2] = (Math.random() - 0.5) * 20;
       const c = palette[Math.floor(Math.random() * palette.length)];
@@ -72,7 +72,7 @@ function GlowingSphere() {
 
   return (
     <Float speed={2} rotationIntensity={0.3} floatIntensity={0.5}>
-      <mesh ref={meshRef} position={[0, 0, 0]}>
+      <mesh ref={meshRef} position={[4, 0, 0]}>
         <icosahedronGeometry args={[1.5, 4]} />
         <meshBasicMaterial
           color="#00e5ff"

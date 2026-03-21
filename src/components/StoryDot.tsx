@@ -41,11 +41,11 @@ export default function StoryDot() {
   // It now starts at 55vh to align beautifully perfectly next to the "companion." text
   const yPath = buildPath(55, 95); 
 
-  // Smooth, subtle elegant curving across the page. It now lingers luxuriously on the right side.
-  // Starting exactly on the right side of the screen (85vw)
+  // Smooth, subtle elegant curving across the entire page, left, center, and right.
+  // Starting on the right (85vw) and sweeping freely back and forth
   const xPath = [
-    85, 82, 88, 75, 80, 65, 70, 55, 60, 45, 50, 45, 50
-  ]; 
+    85, 15, 80, 20, 75, 10, 65, 25, 70, 15, 85, 25, 50
+  ];
 
   const progressSteps = Array.from({ length: 13 }, (_, i) => i / 12);
   const rawYPos = useTransform(scrollYProgress, progressSteps, yPath.map(y => `${y}vh`));
