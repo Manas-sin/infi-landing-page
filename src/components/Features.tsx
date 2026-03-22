@@ -346,6 +346,48 @@ export default function Features() {
         </svg>
       </motion.div>
 
+      {/* DYNAMIC FLOATING BALLS ANIMATION */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        {[...Array(15)].map((_, i) => {
+          // Deterministic pseudo-random values based on index to avoid hydration mismatch
+          const size = (i * 17) % 30 + 10;
+          const left = (i * 23) % 100;
+          const top = (i * 37) % 200;
+          const duration = (i * 13) % 10 + 10;
+          const delay = -((i * 11) % 20);
+          const yMovement = -((i * 19) % 100) - 50;
+          const xMovement = (i * 29) % 50 - 25;
+          const scaleTarget = ((i * 31) % 50) / 100 + 1;
+          const opacity = ((i * 7) % 40) / 100 + 0.1;
+
+          return (
+            <motion.div
+              key={`ball-${i}`}
+              className="absolute rounded-full"
+              style={{
+                width: size,
+                height: size,
+                left: `${left}%`,
+                top: `${top}vh`,
+                background: i % 2 === 0 ? "radial-gradient(circle, #00e5ff 0%, transparent 70%)" : "radial-gradient(circle, #b388ff 0%, transparent 70%)",
+                opacity: opacity,
+              }}
+              animate={{
+                y: [0, yMovement, 0],
+                x: [0, xMovement, 0],
+                scale: [1, scaleTarget, 1],
+              }}
+              transition={{
+                duration: duration,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: delay,
+              }}
+            />
+          );
+        })}
+      </div>
+
       {/* Removed static marquee css blocks to rely upon Interactive Motion & GSAP Scrubbing */}
 
       {/* Slide 2: Why Infi Intro (Takes full 100vh normally, so 1 scroll passes it) */}
