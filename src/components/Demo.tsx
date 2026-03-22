@@ -51,37 +51,8 @@ export default function Demo() {
 
     if (!introRef.current || !videoRef.current) return;
 
-    // Advanced Entrance Animation Timeline for Demo Intro Text
-    const demoPill = introRef.current.querySelector(".demo-pill");
-    const demoWords = introRef.current.querySelectorAll(".split-word");
-
-    const tlEnter = gsap.timeline({
-      scrollTrigger: {
-        trigger: introRef.current,
-        start: "top 80%", // Start animating when it is entering
-        end: "top 35%",   // Finishes when comfortably on screen
-        scrub: 1,
-      }
-    });
-
-    // Animate Pill first
-    tlEnter.fromTo(demoPill, 
-      { opacity: 0, scale: 0.8, y: 30 },
-      { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "power2.out" }
-    )
-    // Then stagger the text words upward like a wave
-    .fromTo(demoWords,
-      { y: "150%", rotateZ: 4, opacity: 0 },
-      {
-        y: "0%", 
-        rotateZ: 0, 
-        opacity: 1, 
-        stagger: 0.03, // Tighter stagger for fluidity
-        duration: 0.7, 
-        ease: "power3.out"
-      },
-      "-=0.2"
-    );
+    // Remove the complex entrance timeline that was causing the blank space bug
+    // Framer Motion viewport triggers will be used instead for absolute reliability
 
     // Fade out and scale up everything smoothly together as you scroll PAST it
     gsap.to(introRef.current, {
@@ -193,8 +164,13 @@ export default function Demo() {
           </motion.div>
         </div>
 
-        {/* ARTISTIC TEXT CONTENT */}
-        <div className="demo-pill relative z-10 flex flex-col items-center mb-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 40, scale: 0.9 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="demo-pill relative z-10 flex flex-col items-center mb-6"
+        >
           <div className="flex items-center gap-4 mb-2 opacity-90">
             <span className="w-12 h-[1px] bg-gradient-to-r from-transparent to-accent" />
             <span className="w-2 h-2 rounded-full bg-accent animate-pulse shadow-[0_0_12px_#00e5ff]" />
@@ -206,15 +182,28 @@ export default function Demo() {
           >
             See it in action.
           </h3>
-        </div>
+        </motion.div>
         
-        <h2 className="relative z-10 font-heading text-[clamp(40px,6vw,90px)] font-black text-center mb-6 leading-[1.05] tracking-tight text-white drop-shadow-2xl" style={{ perspective: "1000px" }}>
+        <motion.h2 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+          className="relative z-10 font-heading text-[clamp(40px,6vw,90px)] font-black text-center mb-6 leading-[1.05] tracking-tight text-white drop-shadow-2xl" 
+          style={{ perspective: "1000px" }}
+        >
           <SplitText text="Padhai feels different" />
-        </h2>
+        </motion.h2>
         
-        <p className="relative z-10 text-[clamp(16px,2vw,24px)] text-text-2 text-center max-w-[700px] leading-relaxed font-light">
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          className="relative z-10 text-[clamp(16px,2vw,24px)] text-text-2 text-center max-w-[700px] leading-relaxed font-light"
+        >
           <SplitText text="Watch how students use Infi to clear doubts, check homework, and entirely bypass frustration." />
-        </p>
+        </motion.p>
       </section>
 
       {/* Slide 5 equivalent: Video Container Section */}
